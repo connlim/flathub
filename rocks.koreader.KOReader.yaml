@@ -56,6 +56,7 @@ modules:
       - install -Dp -m 644 ${FLATPAK_ID}.appdata.xml /app/share/metainfo/${FLATPAK_ID}.appdata.xml
       - ar x koreader.deb
       - tar -xf data.tar.xz
+      - git apply reader.lua.patch
       - cp -r usr/bin usr/lib $FLATPAK_DEST
       - mkdir -p /app/share/icons/hicolor/
       - cp -r icons/* /app/share/icons/hicolor/
@@ -75,6 +76,8 @@ modules:
         sha256: ca1a956801100b68935bb5fdff42d5a885fe19ffb962bf9af92fe7872a8ed2df
       - type: file
         path: rocks.koreader.KOReader.appdata.xml
+      - type: file
+        path: reader.lua.patch
       - type: dir
         path: icons
         

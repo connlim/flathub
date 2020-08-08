@@ -1,0 +1,11 @@
+diff --git a/reader.lua b/reader.lua
+index 496a47d..9b49a9f 100755
+--- a/usr/lib/koreader/reader.lua
++++ b/usr/lib/koreader/reader.lua
+@@ -1,4 +1,4 @@
+-#!/usr/lib/koreader/luajit
++#!./luajit
+ io.stdout:write([[
+ ---------------------------------------------
+                 launching...
+-- 
