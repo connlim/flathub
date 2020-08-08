@@ -1,0 +1,80 @@
+app-id: rocks.koreader.KOReader
+runtime: org.freedesktop.Platform
+runtime-version: "19.08"
+sdk: org.freedesktop.Sdk
+command: koreader
+finish-args:
+  - --share=ipc
+  - --socket=x11
+  - --filesystem=home
+  - --share=network
+  - --device=dri
+modules:
+  # - name: LuaJIT
+  #   no-autogen: true
+  #   make-args:
+  #     - PREFIX=/app
+  #   make-install-args:
+  #     - PREFIX=/app
+  #   post-install:
+  #     # Beta version doesn’t link the executable
+  #     - ln -s luajit-2.1.0-beta3 /app/bin/luajit
+  #   sources:
+  #     - type: archive
+  #       url: https://luajit.org/download/LuaJIT-2.1.0-beta3.tar.gz
+  #       sha256: 1ad2e34b111c802f9d0cdf019e986909123237a28c746b21295b63c9e785d9c3
+  #   cleanup:
+  #     - /bin
+  #     - /include
+  #     - /lib/pkgconfig
+  #     - /share/man
+  #     - "*.a"
+
+  - name: noto-fonts
+    buildsystem: simple
+    build-commands:
+      - mkdir -p /app/share/fonts/truetype/
+      - cp -r noto/ /app/share/fonts/truetype/
+    sources:
+      - type: git
+        url: https://github.com/koreader/koreader-fonts.git
+        commit: a62d585f8c6f40a64faac8b093f548dc6c678740
+
+  - name: droid-sans-fallback
+    buildsystem: simple
+    build-commands:
+      - mkdir -p /app/share/fonts-droid-fallback/truetype/
+      - install -Dp -m 644 DroidSansFallback.ttf /app/share/fonts-droid-fallback/truetype/
+    sources:
+      - type: file
+        url: https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/2d8961d99f3aa559dbd4b78b716ab36c456b43e1/data/fonts/DroidSansFallback.ttf
+        sha256: 21b96a0377f067833a93af3082eb28d4ffab7a8cd46bfd513286f1d64b7b0949
+
+  - name: koreader
+    buildsystem: simple
+    build-commands:
+      - install -Dp -m 644 ${FLATPAK_ID}.appdata.xml /app/share/metainfo/${FLATPAK_ID}.appdata.xml
+      - ar x koreader.deb
+      - tar -xf data.tar.xz
+      - cp -r usr/bin usr/lib $FLATPAK_DEST
+      - mkdir -p /app/share/icons/hicolor/
+      - cp -r icons/* /app/share/icons/hicolor/
+      - install -Dp -m 644 usr/share/applications/koreader.desktop /app/share/applications/${FLATPAK_ID}.desktop
+      - desktop-file-edit --set-key="Icon" --set-value=${FLATPAK_ID} /app/share/applications/${FLATPAK_ID}.desktop
+    cleanup:
+      - ko-icon.png
+      - koreader.deb
+      - control.tar.gz
+      - data.tar.xz
+      - debian-binary
+      - usr
+    sources:
+      - type: file
+        dest-filename: koreader.deb
+        url: https://github.com/koreader/koreader/releases/download/v2020.07.1/koreader-2020.07.1-amd64.deb
+        sha256: ca1a956801100b68935bb5fdff42d5a885fe19ffb962bf9af92fe7872a8ed2df
+      - type: file
+        path: rocks.koreader.KOReader.appdata.xml
+      - type: dir
+        path: icons
+        
