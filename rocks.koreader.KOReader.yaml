@@ -71,9 +71,17 @@ modules:
       - usr
     sources:
       - type: file
+        only-arches: 
+          - x86_64
         dest-filename: koreader.deb
         url: https://github.com/koreader/koreader/releases/download/v2020.07.1/koreader-2020.07.1-amd64.deb
         sha256: ca1a956801100b68935bb5fdff42d5a885fe19ffb962bf9af92fe7872a8ed2df
+      - type: file
+        only-arches: 
+          - arm
+        dest-filename: koreader.deb
+        url: https://github.com/koreader/koreader/releases/download/v2020.07.1/koreader-2020.07.1-armhf.deb
+        sha256: 1024654bdf04d70e9221a53322cd750a461ebaabbeedf8df09b97fa21ba9b5db
       - type: file
         path: rocks.koreader.KOReader.appdata.xml
       - type: file
